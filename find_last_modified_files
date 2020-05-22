@@ -1,0 +1,27 @@
+
+#!/bin/bash
+
+usage()
+{
+cat << EOF  
+  echo "`basename $0` (c)2020 - Sam Bagatin"
+  usage: `basename $0` [dir] [number of lines] [pattern (optional)]
+EOF
+}
+
+
+DIR=$1
+LINES=$2
+PATTERN=$3
+
+if [ -z "${PATTERN}" ]; then
+       OPTION="-type f"
+else
+    OPTION="-name '*${PATTERN}*'"
+fi
+
+COMMAND="find ${DIR} $OPTION -printf '%T@ %p\n' | sort -n | tail -${LINES} | cut -f2- -d\" \""
+
+echo $COMMAND
+eval ${COMMAND}
+
