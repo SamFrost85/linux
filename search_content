@@ -1,0 +1,85 @@
+!/bin/bash
+
+usage()
+{
+cat << EOF
+  echo "`basename $0` (c)2020 - Sam Bagatin"
+  usage: `basename $0` [dir] [pattern] 
+  optional fields:
+    -i  = searchs only files using the specified extensions - e.g. `basename $0` path/dir search_this -extension txt,xml
+    -ip     = search only files which name respects the pattern - e.g. `basename $0` path/dir search_this -ip Dao*  
+    -e  = excludes file with the specified extensions - e.g e.g. `basename $0` path/dir search_this -exclude txt,xml
+    -ep     = search only files which name respects the pattern - e.g. `basename $0` path/dir search_this -ep Dao*
+    -c  = ignore case
+    -w  = disable whole word
+EOF
+}
+
+buildOption() 
+{
+    if [[ $1 == *","* ]]; then
+        echo "\*.{$1}"
+    else
+        echo "*.$1"
+    fi
+}
+
+if [ "$1" == "-h" ]; then
+    usage
+    exit 0
+fi
+
+if (( $# < 2 )); then
+    echo "Illegal number of parameters"
+    usage
+    exit 1
+fi
+
+BEHAVIOUR="-rn"
+DIR=$1
+PATTERN=$2
+OPTIONS="";
+DISABLE_WHOLE_WORD="n";
+shift 2;
+
+
+####
+for arg in "$@" ; do
+
+    if [ "$arg" = "-i" ]; then
+        shift 1
+        OPTIONS="--include=$( buildOption $1 )"
+
+    elif [ "$arg" = "-e" ]; then
+        shift 1
+        OPTIONS="--exclude=$( buildOption $1 )"
+
+    elif [ "$arg" = "-ep" ]; then
+        shift 1
+        OPTIONS="--exclude=$1"
+
+    elif [ "$arg" = "-ip" ]; then
+        shift 1
+        OPTIONS="--include=$1"
+
+    elif [ "$arg" = "-c" ]; then
+        BEHAVIOUR="${BEHAVIOUR}i"
+
+    elif [ "$arg" = "-w" ]; then
+        DISABLE_WHOLE_WORD="y"
+
+    elif [ "$arg" = "-h" ]; then
+        usage
+        exit 0
+    fi
+done
+
+
+if [ "$DISABLE_WHOLE_WORD" = "n" ]; then
+    BEHAVIOUR=${BEHAVIOUR}w
+fi
+
+COMMAND="grep --color=always ${OPTIONS} ${BEHAVIOUR} ${DIR} -e '${PATTERN}'"
+
+echo $COMMAND
+eval ${COMMAND}
