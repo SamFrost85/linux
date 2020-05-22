@@ -1,0 +1,66 @@
+{
+    "custom_log" : {
+        "title"         : "Java log format",
+        "description"       : "Log format used by log4j and output by most java programs",
+        "highlights" : {
+            "numbers" : {
+                "pattern" : "[0-9]",
+                "color" : "Green"
+            },
+            "specials" : {
+                "pattern" : "[\\[\\]@\\-_+=,./<>?!$%&*]",
+                "color" : "Red"
+            }
+
+        },
+
+        "regex" : {
+
+            "custom1" :
+            {
+                    "pattern": "^\\[(?<timestamp>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3})\\] - \\[(?<thread>[^/]+)\\]-( +)(?<level>\\w+) (?<class>[^/]+:\\d+) - (?<body>.*)"
+            },
+
+            "custom2" :
+            {
+                "pattern": "^\\[(?<timestamp>\\d{2}:\\d{2}:\\d{2},\\d{3})\\]( +)(?<level>\\w+) (?<class>[^/]+:\\d+) - (?<body>.*)"
+            },
+            "custom3" :
+            {
+                "pattern": "^\\[(?<timestamp>\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3})\\] - \\[(?<thread>[^/]+)\\] - (?<level>\\w+) (?<class>[^/]+:\\d+) - (?<body>.*)"
+            }
+
+        },
+        "level-field" : "level",
+        "level" : {
+            "fatal"     : "FATAL",
+            "error"     : "ERROR",
+            "warning"   : "WARN",
+            "debug"     : "DEBUG",
+            "info"      : "INFO"
+        },
+
+        "value" : {
+            "class"     : { "kind" : "string", "identifier" : true},
+            "body"      : { "kind" : "string", "identifier" : false},
+            "thread"    : { "kind" : "string", "identifier" : true},
+            "level"     : { "kind" : "string", "identifier" : true}
+        },
+	    "sample" : [
+            {                
+                "line"  : "[2020-05-18 15:28:58,333] - [main]- DEBUG Batcher:4100 - about to open PreparedStatement"
+            },
+            {
+   
+                "line"  : "[2020-05-18 13:36:23,742] - [thread-2]-  INFO Environment:627 - using JDK 1.8 java.sql.Timestamp handling"
+            },
+            {
+                "line"  : "[17:00:28,702] DEBUG Configurator:214 - Returning cached instance of singleton bean 'lazyConfig'"
+            },
+            {
+                "line" : "[2020-05-20 09:15:30,040] - [Notification_WorkerThread] - DEBUG PriorityNotification:78 - getInstanceNotifications()"
+            }
+
+        ]
+    }
+}
